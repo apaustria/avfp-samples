@@ -1,0 +1,43 @@
+*-- This is your HTML code
+<label for="textchartnotes" class="label"><b>Notes</b></label>  					
+<textarea id="textchartnotes" style="width: 583px; height: 150px;" ></textarea>
+<button id='btnclick' type="button" onclick="yourjavascriptfunction(this.id)">Click Me!</button> 
+
+*-- This is your JavaScript code
+<script>
+function yourjavascriptfunction(cparam1){
+		var ajsvariable  = cparam1 ;
+		var procurl = '<%=oProp.ScriptPath+[?action=processingfunctioninserverside]%>';
+		$.ajax({
+			  url: procurl,
+			  type: 'POST',
+			  data: { avfpvar1: ajsvariable, action: "GETDATE" },
+			  beforeSend: function() {
+				   // do something
+					alert('xx');
+			  complete: function() {
+				  // do something, like show a diferent page
+				  document.location.href = '<%=oProp.ScriptPath +[?action=displayfunctionserverside]%>' ;
+			  success: function(data) {
+				  // do something
+				  alert('zz');
+			  }
+			});			
+	}
+</script>
+
+<!-- *-- This is your VFP code ( i.e. main.prg)
+CASE  oProp.Action=="processingfunctioninserverside"
+	lsvar = ""
+	lsvar = NVL(oRequest.Form("avfpvar1"),[])
+	
+	lsAction = NVL(oRequest.Form("action"),[])
+	if lsAction == "GETDATE"
+		*-- or use it in the next HTML by assigining it in an oSession varible
+		oSession.VALUE("thenewvariable", dtos(date()))
+	else
+		oSession.VALUE("thenewvariable", lsvar)
+	endif
+	
+CASE  oProp.Action=="displayfunctionserverside"
+	return oSession.VALUE("thenewvariable") -->
